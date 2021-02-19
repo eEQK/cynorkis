@@ -1,0 +1,5 @@
+build/
+.gradle/
+.idea/
+libobjectbox-jni-linux-x64.so
+objectbox-models/
