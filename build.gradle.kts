@@ -3,5 +3,7 @@ plugins {
     `update-runtime-task`
 }
 
-group = "cynorkis"
-version = "1.0.0-dev1"
+allprojects {
+    group = "cynorkis"
+    version = "1.0.0"
+}
