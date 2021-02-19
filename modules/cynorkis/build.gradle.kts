@@ -1,8 +1,6 @@
 plugins {
     `kotlin-jvm`
     objectbox
-    kodein
-    akka
     junit
 
     `maven-publish`
