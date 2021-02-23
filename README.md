@@ -21,9 +21,13 @@ fun main() {
 ```
 
 Caching makes it easier to work with rate limiting APIs or ones that are slow assuming that responses are reasonably
-static. Cynorkis lets you focus on implementing business logic without having to worry about an intermediate layer you'd have to introduce otherwise.
+static. Cynorkis lets you focus on implementing business logic without having to worry about an intermediate layer you'd
+have to introduce otherwise.
 
-The way it works is really simple. Coordinator asks cache service for cached response. If none is found, the coordinator tells connection service to send a request that is then saved into cache for later usage.
+The way it works is really simple. Coordinator asks cache service for cached response. If none is found, the coordinator
+tells connection service to send a request that is then saved into cache for later usage.
+
+By default, cache storage is located in `$HOME/.cynorkis-cache`.
 
 ### Gradle setup
 
