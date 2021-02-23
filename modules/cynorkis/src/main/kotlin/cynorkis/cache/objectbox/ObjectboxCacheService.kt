@@ -1,5 +1,6 @@
 package cynorkis.cache.objectbox
 
+import cynorkis.cache.CacheIdCalculator
 import cynorkis.cache.CacheService
 import cynorkis.cache.CacheStrategy
 import cynorkis.core.ConnectionRequest
@@ -18,13 +19,14 @@ private val store: BoxStore = MyObjectBox.builder()
     .name(cacheFolder).build()
 
 internal class ObjectboxCacheService(
-    private val cacheStrategy: CacheStrategy
+    private val cacheStrategy: CacheStrategy,
+    private val cacheIdCalculator: CacheIdCalculator,
 ) : CacheService {
     private val box = store.boxFor<ObjectboxCacheModel>()
 
     override fun fetchFromCache(request: ConnectionRequest): ConnectionResponse? {
         return box.query()
-            .equal(ObjectboxCacheModel_.responseId, computeResponseId(request))
+            .equal(ObjectboxCacheModel_.responseId, cacheIdCalculator.calculateId(request))
             .build()
             .findFirst()
             .let(::connectionResponseFrom)
@@ -42,7 +44,7 @@ internal class ObjectboxCacheService(
 
     private fun cacheModelFrom(request: ConnectionRequest, response: ConnectionResponse): ObjectboxCacheModel {
         return ObjectboxCacheModel(
-            responseId = computeResponseId(request),
+            responseId = cacheIdCalculator.calculateId(request),
             statusCode = response.statusCode,
             statusCodePhrase = response.statusCodePhrase,
             headers = response.headers.joinToString(HEADER_DELIMETER),
@@ -59,6 +61,4 @@ internal class ObjectboxCacheService(
             cache.body,
         )
     }
-
-    private fun computeResponseId(request: ConnectionRequest): String = "${request.method} ${request.url}"
 }

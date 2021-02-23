@@ -1,5 +1,6 @@
 package cynorkis.cache
 
+import cynorkis.cache.idcalculator.MethodUrlConcatenatingIdCalculator
 import cynorkis.cache.objectbox.ObjectboxCacheService
 import cynorkis.cache.strategy.CacheSuccessfulResponsesStrategy
 import cynorkis.core.ConnectionRequest
@@ -12,6 +13,9 @@ interface CacheService {
 }
 
 object CacheServiceFactory {
-    fun objectbox(cacheStrategy: CacheStrategy = CacheSuccessfulResponsesStrategy()): CacheService =
-        ObjectboxCacheService(cacheStrategy)
+    fun objectbox(
+        cacheStrategy: CacheStrategy = CacheSuccessfulResponsesStrategy(),
+        cacheIdCalculator: CacheIdCalculator = MethodUrlConcatenatingIdCalculator(),
+    ): CacheService =
+        ObjectboxCacheService(cacheStrategy, cacheIdCalculator)
 }
