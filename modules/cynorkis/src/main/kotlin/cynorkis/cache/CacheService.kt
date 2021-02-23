@@ -1,6 +1,7 @@
 package cynorkis.cache
 
 import cynorkis.cache.objectbox.ObjectboxCacheService
+import cynorkis.cache.strategy.CacheSuccessfulResponsesStrategy
 import cynorkis.core.ConnectionRequest
 import cynorkis.core.ConnectionResponse
 
@@ -11,5 +12,6 @@ interface CacheService {
 }
 
 object CacheServiceFactory {
-    fun objectbox(): CacheService = ObjectboxCacheService()
+    fun objectbox(cacheStrategy: CacheStrategy = CacheSuccessfulResponsesStrategy()): CacheService =
+        ObjectboxCacheService(cacheStrategy)
 }

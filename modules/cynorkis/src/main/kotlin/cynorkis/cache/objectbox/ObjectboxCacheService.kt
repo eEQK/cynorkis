@@ -1,6 +1,7 @@
 package cynorkis.cache.objectbox
 
 import cynorkis.cache.CacheService
+import cynorkis.cache.CacheStrategy
 import cynorkis.core.ConnectionRequest
 import cynorkis.core.ConnectionResponse
 import io.objectbox.BoxStore
@@ -16,7 +17,9 @@ private val store: BoxStore = MyObjectBox.builder()
     .baseDirectory(File(home))
     .name(cacheFolder).build()
 
-internal class ObjectboxCacheService : CacheService {
+internal class ObjectboxCacheService(
+    private val cacheStrategy: CacheStrategy
+) : CacheService {
     private val box = store.boxFor<ObjectboxCacheModel>()
 
     override fun fetchFromCache(request: ConnectionRequest): ConnectionResponse? {
@@ -28,7 +31,9 @@ internal class ObjectboxCacheService : CacheService {
     }
 
     override fun cache(request: ConnectionRequest, response: ConnectionResponse) {
-        box.put(cacheModelFrom(request, response))
+        if (cacheStrategy.isEligibleForCaching(request, response)) {
+            box.put(cacheModelFrom(request, response))
+        }
     }
 
     override fun clearCache() {
